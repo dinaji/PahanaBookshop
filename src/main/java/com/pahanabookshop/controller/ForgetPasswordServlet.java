@@ -22,7 +22,7 @@ public class ForgetPasswordServlet extends HttpServlet {
         try {
             String password = new UserDAO().recoverPassword(email);
             if (password != null) {
-                req.setAttribute("message", "Your password: " + password);
+                req.setAttribute("message", "Your password is " + password);
             } else {
                 req.setAttribute("error", "Email not found.");
             }

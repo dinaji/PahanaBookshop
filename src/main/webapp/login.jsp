@@ -114,7 +114,7 @@
 <div class="container">
     <div class="image-section"></div>
     <div class="form-section">
-        <h2> Pahana Bookshop</h2>
+        <h2> Login to Pahana Bookshop</h2>
         <form action="<%=request.getContextPath()%>/LoginServlet" method="post">
             <input type="email" name="email" placeholder="Email Address" required>
             <input type="password" name="password" placeholder="Password" required>
