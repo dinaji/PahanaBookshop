@@ -1,0 +1,51 @@
+name: CI - Build with javac (no Maven)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      SRC_MAIN: src/main/java
+      BUILD_DIR: build/classes
+      LIB_DIR: build/lib
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      # Download servlet API (needed if you import javax.servlet.*)
+      - name: Prepare libs
+        run: |
+          mkdir -p "$LIB_DIR" "$BUILD_DIR"
+          curl -L -o "$LIB_DIR/servlet-api.jar" https://repo1.maven.org/maven2/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar
+
+      - name: Compile sources
+        run: |
+          if [ -d "$SRC_MAIN" ]; then
+            find "$SRC_MAIN" -name "*.java" > sources.txt
+            if [ -s sources.txt ]; then
+              javac -cp "$LIB_DIR/*" -d "$BUILD_DIR" @"sources.txt"
+            else
+              echo "No Java sources found in $SRC_MAIN"; exit 1
+            fi
+          else
+            echo "$SRC_MAIN does not exist"; exit 1
+          fi
+
+      - name: Upload compiled classes
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-classes
+          path: build/classes
