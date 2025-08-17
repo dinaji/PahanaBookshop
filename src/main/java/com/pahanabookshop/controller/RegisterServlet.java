@@ -21,8 +21,8 @@ public class RegisterServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         
-        if (password.length() < 6) {
-            req.setAttribute("error", "Password must be at least 6 characters long.");
+        if (password.length() < 5) {
+            req.setAttribute("error", "Password must be at least 5 characters long.");
             req.getRequestDispatcher("register.jsp").forward(req, res);
             return;
         }
